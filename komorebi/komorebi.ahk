@@ -14,7 +14,7 @@ Komorebic(cmd) {
 }
 
 !+w:: Run "firefox.exe -private-window"
-!Enter:: Run "wt"
+!Enter:: Run "wezterm-gui.exe"
 !0:: Run "explorer"
 
 !q::Komorebic("close")

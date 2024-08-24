@@ -39,20 +39,20 @@ function termedit {
 }
 
 function windowedit {
-    $path = Join-Path -P $env:USERPROFILE -ChildPath '\.config\komorebi\komorebi.json'
+    $path = Join-Path -P $env:USERPROFILE -ChildPath 'config\komorebi\komorebi.json'
     nvim $path
 }
 
 function vimconfig {
-    $path = Join-Path -P $env:USERPROFILE -ChildPath 'AppData\Local\nvim\'
+    $path = Join-Path -P $env:USERPROFILE -ChildPath 'config\nvim'
     Set-Location $path
-    nvim .
+    nvim init.lua
 }
 
 function ahkedit {
     $path = Join-Path -P $env:USERPROFILE -ChildPath 'Documents\AutoHotKey\'
     Set-Location $path
-    nvim .
+    nvim
 }
 
 function notes {
@@ -67,4 +67,22 @@ function obsid {
     if ($file) {
         nvim $file
     }
+}
+
+function proj {
+    $directory = Get-ChildItem -Path "$HOME\code" -Directory -Depth 1 -Exclude ".*"| Select-Object -ExpandProperty FullName | fzf
+    if ($directory) {
+        Set-Location $directory
+        nvim
+    }
+}
+
+# Import the Chocolatey Profile that contains the necessary code to enable
+# tab-completions to function for `choco`.
+# Be aware that if you are missing these lines from your profile, tab completion
+# for `choco` will not function.
+# See https://ch0.co/tab-completion for details.
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Test-Path($ChocolateyProfile)) {
+  Import-Module "$ChocolateyProfile"
 }

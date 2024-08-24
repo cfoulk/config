@@ -1,10 +1,6 @@
 
 -- key mapping
-vim.g.mapleader = " "
 local keymap = vim.keymap.set
-
--- control backspace, delete word
-keymap("i", "<C-H>", "<C-W>");
 
 -- Copy to clipboard
 keymap("v", "<leader>y", [["+y]])
@@ -25,6 +21,8 @@ keymap("n", "n", [[nzzzv]])
 keymap("n", "N", [[Nzzzv]])
 keymap("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
+keymap("n", "<leader>l", [[:nohl<CR>]])
+
 -- Move entire line up/down
 keymap("n", "<C-Up>", [[ddkP]])
 keymap("n", "<C-Down>", [[ddp]])
@@ -33,12 +31,12 @@ keymap("n", "<C-Down>", [[ddp]])
 keymap("n", "<leader>O", [[m`O<ESC>``]])
 keymap("n", "<leader>o", [[m`o<ESC>``]])
 
-keymap("n", "<leader>u", [[<ESC><CMD>Ex<CR>]])
+-- keymap("n", "<leader>u", [[<ESC><CMD>Ex<CR>]])
 
 -- Moving within my buffer list
 -- keymap("n", "H", [[<ESC><CMD>bprevious<CR>]])
 -- keymap("n", "L", [[<ESC><CMD>bnext<CR>]])
-keymap("n", "<leader>d", [[<ESC><CMD>bdelete<CR>]])
+-- keymap("n", "<leader>d", [[<ESC><CMD>bdelete<CR>]])
 keymap("n", "H", [[gT]])
 keymap("n", "L", [[gt]])
 
