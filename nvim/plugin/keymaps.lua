@@ -2,6 +2,7 @@
 -- key mapping
 local keymap = vim.keymap.set
 
+
 -- Copy to clipboard
 keymap("v", "<leader>y", [["+y]])
 keymap("n", "<leader>Y", [["+yg_]])

@@ -14,8 +14,29 @@ function OnViModeChange {
 Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler $Function:OnViModeChange 
 # oh-my-posh init pwsh | Invoke-Expression
 # oh-my-posh init pwsh --config ~/AppData/Local/Programs/oh-my-osh/themes/huvix.omp.json | Invoke-Expression
-oh-my-posh init pwsh --config ~/huvix.omp.json | Invoke-Expression
+# oh-my-posh init pwsh --config ~/huvix.omp.json | Invoke-Expression
 
+# function Prompt { 
+#     # ANSI escape code for bold text
+#     $bold = "`e[1m"
+#     # ANSI escape code to reset formatting
+#     $reset = "`e[0m"
+#     # Get the current directory
+#     $currentDir = Get-Location
+
+#     # Display the username, computer name, and current directory
+#     # $prompt = "$env:USERNAME@$env:COMPUTERNAME $currentDir> "
+#     $prompt = "$bold$currentDir>"
+
+#     # Set the color of the prompt text
+#     Write-Host $prompt -NoNewline -ForegroundColor DarkYellow
+
+#     # Return a prompt character
+#     return " "
+# }
+
+# Load the custom prompt
+Prompt
 # Define a custom function to accept the suggestion
 function Accept-SuggestionWithShiftTab {
     [Microsoft.PowerShell.PSConsoleReadLine]::AcceptSuggestion()
@@ -63,8 +84,10 @@ function notes {
 }
 
 function obsid {
+    $vaults = "$HOME\Documents\Obsidian Vaults"
     $file = Get-ChildItem -Path "$HOME\Documents\Obsidian Vaults" -Include @("*.md","*.txt") -Recurse | Select-Object -ExpandProperty FullName | fzf
     if ($file) {
+        Set-Location $vaults
         nvim $file
     }
 }

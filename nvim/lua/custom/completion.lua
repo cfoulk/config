@@ -1,5 +1,8 @@
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
+
+
+
 luasnip.config.setup {}
 
 
@@ -12,7 +15,9 @@ cmp.setup {
         luasnip.lsp_expand(args.body)
       end,
     },
-    completion = { completeopt = 'menu,menuone,noinsert' },
+    completion = {
+        completeopt = 'menu,menuone,noinsert',
+    },
 
     -- For an understanding of why these mappings were
     -- chosen, you will need to read `:help ins-completion`
@@ -24,7 +29,8 @@ cmp.setup {
       ['<C-b>'] = cmp.mapping.scroll_docs(-4),
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
       ['<C-y>'] = cmp.mapping.confirm { select = true },
-      ['<C-Space>'] = cmp.mapping.complete {},
+      -- ['<C-Space>'] = cmp.mapping.complete {},
+      ['<C-i>'] = cmp.mapping.complete {}, -- perhaps I could find a better binding for this?
       ['<C-l>'] = cmp.mapping(function()
         if luasnip.expand_or_locally_jumpable() then
           luasnip.expand_or_jump()
