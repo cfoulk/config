@@ -2,3 +2,5 @@ PowerShell/Help/
 PowerShell/Modules/
 PowerShell/Scripts/
 PowerShell/powershell.config.json
+
+shell/bash_paths.sh
