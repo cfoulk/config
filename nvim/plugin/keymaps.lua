@@ -3,6 +3,8 @@
 local keymap = vim.keymap.set
 
 
+keymap("i", "<C-\\>", "<C-w>")
+
 -- Copy to clipboard
 keymap("v", "<leader>y", [["+y]])
 keymap("n", "<leader>Y", [["+yg_]])
@@ -23,6 +25,8 @@ keymap("n", "N", [[Nzzzv]])
 keymap("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 keymap("n", "<leader>l", [[:nohl<CR>]])
+
+keymap('n', 'yc', function() vim.api.nvim_feedkeys('yygccp', 'm', false) end)
 
 -- Move entire line up/down
 keymap("n", "<C-Up>", [[ddkP]])
