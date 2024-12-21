@@ -415,6 +415,21 @@ class VD {
       Sleep 25
     }
   }
+
+  static _SwitchDesktop(desktopNum) {
+    firstWindowId := this._getFirstWindowInVD(desktopNum)
+    if (!firstWindowId) {
+      firstWindowId := WinExist("ahk_class Progman ahk_exe explorer.exe")
+    }
+    IVirtualDesktop := this._GetDesktops_Obj().GetAt(desktopNum)
+    WinActivate("ahk_class Shell_TrayWnd") 
+    WinWaitActive("ahk_class Shell_TrayWnd") 
+    this._dll_SwitchDesktop(IVirtualDesktop)
+    this._dll_SwitchDesktop(IVirtualDesktop)
+    WinMinimize("ahk_class Shell_TrayWnd") 
+    this._waitForCurrentDesktopArrived(desktopNum, firstWindowId)
+  }
+
   static _getLocalizedWord_Desktop() {
     if (this.savedLocalizedWord_Desktop) {
       return this.savedLocalizedWord_Desktop

@@ -118,11 +118,13 @@ SwitchViewToNumDesktop(Num)
         return
     }
 
-    WinActivate("ahk_class Shell_TrayWnd") 
-    if WinWaitActive("ahk_class Shell_TrayWnd") {
-        VD.goToDesktopNum(Num)
-        && WinMinimize("ahk_class Shell_TrayWnd") 
-    }
+    VD._SwitchDesktop(Num)
+
+    ; WinActivate("ahk_class Shell_TrayWnd") 
+    ; if WinWaitActive("ahk_class Shell_TrayWnd") {
+    ;     VD.goToDesktopNum(Num)
+    ;     && WinMinimize("ahk_class Shell_TrayWnd") 
+    ; }
 }
 
 
