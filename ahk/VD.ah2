@@ -1,6 +1,6 @@
 class VD {
   static dummyStatic1 := VD._init()
-  static animation_on := true
+  static animation_on := false
   static _init() {
     OS_Version := FileGetVersion(A_WinDir "\System32\twinui.pcshell.dll")
     splitByDot := StrSplit(OS_Version, ".")
@@ -417,17 +417,13 @@ class VD {
   }
 
   static _SwitchDesktop(desktopNum) {
-    firstWindowId := this._getFirstWindowInVD(desktopNum)
-    if (!firstWindowId) {
-      firstWindowId := WinExist("ahk_class Progman ahk_exe explorer.exe")
-    }
+
+    FG_Call := DllCall("User32\AllowSetForegroundWindow", "Int", -1)
+    if (FG_Call = 0)
+        return
+
     IVirtualDesktop := this._GetDesktops_Obj().GetAt(desktopNum)
-    WinActivate("ahk_class Shell_TrayWnd") 
-    WinWaitActive("ahk_class Shell_TrayWnd") 
     this._dll_SwitchDesktop(IVirtualDesktop)
-    this._dll_SwitchDesktop(IVirtualDesktop)
-    WinMinimize("ahk_class Shell_TrayWnd") 
-    this._waitForCurrentDesktopArrived(desktopNum, firstWindowId)
   }
 
   static _getLocalizedWord_Desktop() {

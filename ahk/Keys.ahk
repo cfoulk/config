@@ -31,7 +31,7 @@ CapsLock::Esc
 
 ; + SHIFT, # WIN, !ALT, ^ CTRL
 
-^#!r:: 
+^#!r::
 {
     TrayTip "Key Script Reloaded", "Reload"
     Reload
@@ -40,27 +40,27 @@ CapsLock::Esc
 #q:: ; Win + Q closes active window
 {
     win := WinGetTitle("A") ; Get the title of the active window
-    try PostMessage(0x112, 0xF060, 0,, win) ; Send the close command
+    try PostMessage(0x112, 0xF060, 0, , win) ; Send the close command
 }
 
-#w:: OpenProgram("firefox", "Mozilla Firefox",, "Private Browsing")
+#w:: OpenProgram("firefox", "Mozilla Firefox", , "Private Browsing")
 #+w:: OpenProgram("firefox.exe -private-window", "Mozilla Firefox Private Browsing")
 #e:: OpenProgram("explorer", "ahk_class CabinetWClass")
 #Enter:: OpenProgram("alacritty.exe", "Alacritty")
-#o:: 
+#o::
 {
     VpnPath := EnvGet("VPN_PATH")
     VpnExe := EnvGet("VPN_EXE")
-    if(VpnPath and VpnExe) 
+    if (VpnPath and VpnExe)
         OpenProgram(VpnPath, "ahk_exe " . VpnExe)
     else
         MsgBox "Problems with VPN"
 }
 
-#h::SwitchFocus("Left")
-#l::SwitchFocus("Right") ; Normally Win + L locks windows but I added a policy in RegEdit... see above
-#j::SwitchFocus("Down")
-#k::SwitchFocus("Up")
+#h:: SwitchFocus("Left")
+#l:: SwitchFocus("Right") ; Normally Win + L locks windows but I added a policy in RegEdit... see above
+#j:: SwitchFocus("Down")
+#k:: SwitchFocus("Up")
 
 #1:: SwitchViewToNumDesktop(1)
 #2:: SwitchViewToNumDesktop(2)
@@ -72,37 +72,19 @@ CapsLock::Esc
 #+3:: MoveCurrentWinToDesktop(3)
 #+4:: MoveCurrentWinToDesktop(4)
 
-#b::
+#y::
 {
-    winIds := WinGetList(,, "Program Manager")
+    CurrentDesktopNum := VD.getCurrentDesktopNum()
+    IB := InputBox("Input new name for desktop.", "Desktop Name", "w100 h100", "Desktop " CurrentDesktopNum)
 
-    WinGetPos &CurrX,,,, "A"
-    CurrentWindow := WinGetId("A")
-    windowTitles := ""
-    cnt := 1
+    if (IB.Result = "Cancel")
+        return
 
-    for Win in winIds 
-    {
-        Style := WinGetStyle("ahk_id " . Win)
-        if !(Style & 0x10000000) ; Currently invisible on screen
-        {
-            continue
-        }
+    VD.setNameToDesktopNum(IB.Value, CurrentDesktopNum)
 
-        if(WinGetTransparent("ahk_id " . Win) = 0)
-            continue
-
-        if(WinGetTitle("ahk_id " . Win) = "")
-            continue
-        title := WinGetTitle("ahk_id " . Win)
-        windowTitles .= "`n" . cnt . ". " . title
-        cnt := cnt + 1
-    }
-
-    MsgBox(windowTitles)
 }
 
-SwitchViewToNumDesktop(Num) 
+SwitchViewToNumDesktop(Num)
 {
     if VD.getCount() < Num
         return
@@ -110,25 +92,15 @@ SwitchViewToNumDesktop(Num)
     if VD.getCurrentDesktopNum() == Num
         return
 
+    ; Close Start menu before switching desktops
     if WinActive("ahk_class Windows.UI.Core.CoreWindow")
         WinClose
 
-    if not WinExist("ahk_class Shell_TrayWnd") {
-        VD.goToDesktopNum(Num)
-        return
-    }
-
     VD._SwitchDesktop(Num)
-
-    ; WinActivate("ahk_class Shell_TrayWnd") 
-    ; if WinWaitActive("ahk_class Shell_TrayWnd") {
-    ;     VD.goToDesktopNum(Num)
-    ;     && WinMinimize("ahk_class Shell_TrayWnd") 
-    ; }
 }
 
 
-MoveCurrentWinToDesktop(Num) 
+MoveCurrentWinToDesktop(Num)
 {
     if VD.getCount() < Num
         return
@@ -136,18 +108,18 @@ MoveCurrentWinToDesktop(Num)
     if VD.getCurrentDesktopNum() == Num
         return
 
-    VD.MoveWindowToDesktopNum("A",Num)
+    VD.MoveWindowToDesktopNum("A", Num)
 }
 
-OpenProgram(Program, WinTitle := "", WinText := "", ExcludeTitle := "", ExcludeText := "") 
+OpenProgram(Program, WinTitle := "", WinText := "", ExcludeTitle := "", ExcludeText := "")
 {
-    if(WinTitle = "" AND WinText = "") {
+    if (WinTitle = "" AND WinText = "") {
         MsgBox "No defined WinTitle or WinText"
         return
     }
 
     FoundWindow := WinExist(WinTitle, WinText, ExcludeTitle, ExcludeText)
-    
+
     if FoundWindow {
         if WinActive(WinTitle)
             WinMinimize WinTitle
@@ -161,41 +133,41 @@ OpenProgram(Program, WinTitle := "", WinText := "", ExcludeTitle := "", ExcludeT
 ; TODO
 ; Give presidence for previous windows if multiple windows have the same MinPosition
 
-SwitchFocus(direction) 
+SwitchFocus(direction)
 {
     if WinActive("A")
     {
         ActiveWinID := WinGetId("A")
-        WinGetClientPos &CurrentX, &CurrentY,,, "ahk_id " . activeWinID
+        WinGetClientPos(&CurrentX, &CurrentY, , , "ahk_id " . activeWinID)
     }
     else
     {
         MouseGetPos &CurrentX, &CurrentY
     }
-    WinList := WinGetList(,, "Program Manager")
+    WinList := WinGetList(, , "Program Manager")
 
     ClosestWindowID := 0
     MinPosition := 10000
     OffSet := 10000
     title := ""
 
-    for Win in WinList 
+    for Win in WinList
     {
         if (isSet(ActiveWinID) && Win = ActiveWinID)
             continue
 
-        if(WinGetTransparent("ahk_id " . Win) = 0)
+        if (WinGetTransparent("ahk_id " . Win) = 0)
             continue
 
-        if(WinGetTitle("ahk_id " . Win) = "")
+        if (WinGetTitle("ahk_id " . Win) = "")
             continue
 
-        WinGetClientPos &TempX, &TempY, &TempW, &TempH, "ahk_id " . Win
+        WinGetClientPos(&TempX, &TempY, &TempW, &TempH, "ahk_id " . Win)
 
         dx := TempX - CurrentX
         dy := TempY - CurrentY
 
-        if(direction = "Up" && dy < 0 && Abs(dx) <= Abs(dy))
+        if (direction = "Up" && dy < 0 && Abs(dx) <= Abs(dy))
         {
             dist := Sqrt(dx ** 2 + dy ** 2)
             if (dy <= MinPosition && dist < Offset) {
@@ -205,7 +177,7 @@ SwitchFocus(direction)
                 title := WinGetTitle("ahk_id " . Win)
             }
         }
-        else if(direction = "Down" && dy > 0 && Abs(dx) <= Abs(dy))
+        else if (direction = "Down" && dy > 0 && Abs(dx) <= Abs(dy))
         {
             dist := Sqrt(dx ** 2 + dy ** 2)
             if (dy <= MinPosition && dist < OffSet) {
@@ -215,7 +187,7 @@ SwitchFocus(direction)
                 title := WinGetTitle("ahk_id " . Win)
             }
         }
-        else if(direction = "Left" && dx < 0 && Abs(dx) >= Abs(dy))
+        else if (direction = "Left" && dx < 0 && Abs(dx) >= Abs(dy))
         {
             dist := Sqrt(dx ** 2 + dy ** 2)
             if (dx <= MinPosition && dist < OffSet) {
@@ -225,7 +197,7 @@ SwitchFocus(direction)
                 title := WinGetTitle("ahk_id " . Win)
             }
         }
-        else if(direction = "Right" && dx > 0 && Abs(dx) >= Abs(dy))
+        else if (direction = "Right" && dx > 0 && Abs(dx) >= Abs(dy))
         {
             dist := Sqrt(dx ** 2 + dy ** 2)
             if (dx <= MinPosition && dist < OffSet) {
@@ -241,8 +213,8 @@ SwitchFocus(direction)
     {
         WinActivate("ahk_id " . ClosestWindowID)
 
-        if(MouseFollow) {
-            WinGetClientPos &NewX, &NewY, &NewW, &NewH, "ahk_id " . ClosestWindowID
+        if (MouseFollow) {
+            WinGetClientPos(&NewX, &NewY, &NewW, &NewH, "ahk_id " . ClosestWindowID)
             XCoord := NewX + (NewW / 2)
             YCoord := NewY + (NewH / 2)
             DllCall("SetCursorPos", "int", XCoord, "int", YCoord)
@@ -254,4 +226,3 @@ SwitchFocus(direction)
         }
     }
 }
-
