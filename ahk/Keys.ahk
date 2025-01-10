@@ -121,10 +121,10 @@ OpenProgram(Program, WinTitle := "", WinText := "", ExcludeTitle := "", ExcludeT
     FoundWindow := WinExist(WinTitle, WinText, ExcludeTitle, ExcludeText)
 
     if FoundWindow {
-        if WinActive(WinTitle)
-            WinMinimize WinTitle
+        if WinActive(WinTitle, WinText, ExcludeTitle, ExcludeText)
+            WinMinimize(WinTitle, WinText, ExcludeTitle, ExcludeText)
         else
-            WinActivate WinTitle
+            WinActivate(WinTitle, WinText, ExcludeTitle, ExcludeText)
     } else {
         Run Program
     }
