@@ -11,7 +11,6 @@ ProcessSetPriority "H"
 SetWinDelay -1
 SetControlDelay -1
 
-MouseFollow := false ; Flag for where or not our mouse follows when switching windows
 
 ; For Win + L key to work you must create a new policy in the Registry Editor.
 ; HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System with DWORD value of 0x01.
@@ -22,6 +21,11 @@ MouseFollow := false ; Flag for where or not our mouse follows when switching wi
 #Include VD.ah2
 
 VD.createUntil(4)
+
+WORK_BROWSER := EnvGet("ENV_WORK_BROWSER")
+VPN_PATH := EnvGet("ENV_VPN_PATH")
+VPN_EXE := EnvGet("ENV_VPN_EXE")
+MOUSE_FOLLOW := EnvGet("ENV_MOUSE_FOLLOW") ; Flag for where or not our mouse follows when switching windows
 
 return
 
@@ -43,16 +47,27 @@ CapsLock::Esc
     try PostMessage(0x112, 0xF060, 0, , win) ; Send the close command
 }
 
-#w:: OpenProgram("firefox", "Mozilla Firefox", , "Private Browsing")
-#+w:: OpenProgram("firefox.exe -private-window", "Mozilla Firefox Private Browsing")
+#w::
+{
+    if (WORK_BROWSER)
+        OpenProgram("msedge.exe", "ahk_exe msedge.exe",, "InPrivate")
+    else
+        OpenProgram("firefox", "Mozilla Firefox", , "Private Browsing")
+}
+#+w::
+{
+    if (WORK_BROWSER)
+        MsgBox("Bro your at work.")
+    else
+        OpenProgram("firefox.exe -private-window", "Mozilla Firefox Private Browsing")
+}
+
 #e:: OpenProgram("explorer", "ahk_class CabinetWClass")
 #Enter:: OpenProgram("alacritty.exe", "Alacritty")
 #o::
 {
-    VpnPath := EnvGet("VPN_PATH")
-    VpnExe := EnvGet("VPN_EXE")
-    if (VpnPath and VpnExe)
-        OpenProgram(VpnPath, "ahk_exe " . VpnExe)
+    if (VPN_PATH and VPN_EXE)
+        OpenProgram(VPN_PATH, "ahk_exe " . VPN_EXE)
     else
         MsgBox "Problems with VPN"
 }
@@ -213,7 +228,7 @@ SwitchFocus(direction)
     {
         WinActivate("ahk_id " . ClosestWindowID)
 
-        if (MouseFollow) {
+        if (MOUSE_FOLLOW) {
             WinGetClientPos(&NewX, &NewY, &NewW, &NewH, "ahk_id " . ClosestWindowID)
             XCoord := NewX + (NewW / 2)
             YCoord := NewY + (NewH / 2)
