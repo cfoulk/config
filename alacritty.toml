@@ -1,4 +1,4 @@
-[shell]
+[terminal.shell]
 program = "C:\\Program Files\\WSL\\wsl.exe"
 args = ["--cd ~"]
 
