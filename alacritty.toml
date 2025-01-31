@@ -1,6 +1,11 @@
-[terminal.shell]
+[shell]
 program = "C:\\Program Files\\WSL\\wsl.exe"
 args = ["--cd ~"]
+
+[[keyboard.bindings]]
+key = "Back"
+mods = "Control"
+chars = "\u0017"
 
 [font]
 normal = { family = "LiterationMono Nerd Font Mono", style = "Regular"}
