@@ -3,12 +3,12 @@ require('telescope').setup {
         path_display = { "truncate" },
     },
     pickers = {
-        find_files = {
-            theme = "dropdown",
-        },
-        buffers = {
-            theme = "dropdown",
-        }
+        -- find_files = {
+        --     theme = "dropdown",
+        -- },
+        -- buffers = {
+        --     theme = "dropdown",
+        -- }
     },
 }
 local builtin = require('telescope.builtin')

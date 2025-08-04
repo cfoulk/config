@@ -2,7 +2,7 @@ local M = {}
 
 M.setup = function ()
     require'nvim-treesitter.configs'.setup {
-      ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "java", "xml" },
+      ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "java", "xml", "html" },
 
       sync_install = true,
 

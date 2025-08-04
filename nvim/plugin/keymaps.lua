@@ -17,6 +17,7 @@ keymap("v", "<leader>P", [["+P]])
 keymap("n", "<leader>p", [["+p]])
 keymap("n", "<leader>P", [["+P]])
 
+keymap("n", "gho", [[:nohl<cr>]])
 keymap("n", "J", [[mzJ`z]])
 keymap("n", "<C-d>", [[<C-d>zz]])
 keymap("n", "<C-u>", [[<C-u>zz]])
