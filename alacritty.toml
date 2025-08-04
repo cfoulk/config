@@ -8,7 +8,7 @@ mods = "Control"
 chars = "\u0017"
 
 [font]
-normal = { family = "LiterationMono Nerd Font Mono", style = "Regular"}
+normal = { family = "FiraMono Nerd Font", style = "Regular"}
 size = 13
 
 [window]
