@@ -2,10 +2,13 @@ return
 {
     'neovim/nvim-lspconfig',
     dependencies = {
-        { 'williamboman/mason.nvim', config = true },
-        'williamboman/mason-lspconfig.nvim',
+        -- { 'williamboman/mason.nvim', config = true },
+        -- 'williamboman/mason-lspconfig.nvim',
+          { "mason-org/mason.nvim", config = true },
+          { "mason-org/mason-lspconfig.nvim" },
+          -- { "mason-org/mason.nvim", version = "^1.0.0", config = true },
+          -- { "mason-org/mason-lspconfig.nvim", version = "^1.0.0" },
         'WhoIsSethDaniel/mason-tool-installer.nvim',
-
         -- Useful status updates for LSP.
         -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
         { 'j-hui/fidget.nvim',       opts = {} },
@@ -96,28 +99,28 @@ return
 
         }
 
-        local ahk2_configs = {
-            autostart = true,
-            cmd = {
-                "node",
-                vim.fn.expand("$HOME/installs/vscode-autohotkey2-lsP/server/dist/server.js"),
-                "--stdio"
-            },
-            filetypes = { "ahk", "autohotkey", "ah2" },
-            root_dir = require("lspconfig").util.root_pattern(".git", "."),
-            init_options = {
-                locale = "en-us",
-                InterpreterPath = "/mnt/c/Program Files/AutoHotkey/v2/AutoHotkey.exe",
-            },
-            single_file_support = true,
-            flags = { debounce_text_changes = 500 },
-            capabilities = capabilities,
-        }
+        -- local ahk2_configs = {
+        --     autostart = true,
+        --     cmd = {
+        --         "node",
+        --         vim.fn.expand("$HOME/installs/vscode-autohotkey2-lsP/server/dist/server.js"),
+        --         "--stdio"
+        --     },
+        --     filetypes = { "ahk", "autohotkey", "ah2" },
+        --     root_dir = require("lspconfig").util.root_pattern(".git", "."),
+        --     init_options = {
+        --         locale = "en-us",
+        --         InterpreterPath = "/mnt/c/Program Files/AutoHotkey/v2/AutoHotkey.exe",
+        --     },
+        --     single_file_support = true,
+        --     flags = { debounce_text_changes = 500 },
+        --     capabilities = capabilities,
+        -- }
 
-        local configs = require "lspconfig.configs"
-        configs["ahk2"] = { default_config = ahk2_configs }
-        local nvim_lsp = require("lspconfig")
-        nvim_lsp.ahk2.setup({})
+        -- local configs = require "lspconfig.configs"
+        -- configs["ahk2"] = { default_config = ahk2_configs }
+        -- local nvim_lsp = require("lspconfig")
+        -- nvim_lsp.ahk2.setup({})
 
         require('mason').setup()
 
@@ -128,6 +131,7 @@ return
         require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
         require('java').setup()
+        -- vim.lsp.enable(jdtls)
         require('lspconfig').jdtls.setup({})
         require('mason-lspconfig').setup {
             handlers = {
@@ -138,9 +142,26 @@ return
                     -- certain features of an LSP (for example, turning off formatting for tsserver)
 
                     server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+                    -- vim.lsp.enable(server_name)
+                    -- vim.lsp.config(server_name, { capabilities = server.capabilities } )
                     require('lspconfig')[server_name].setup(server)
                 end,
             },
         }
-    end,
+
+        vim.lsp.config('lua_ls', {
+                settings = {
+                    Lua = {
+                        completion = {
+                            callSnippet = 'Replace',
+                        },
+                        diagnostics = {
+                            globals = { 'vim' },
+                        },
+                        -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+                        -- diagnostics = { disable = { 'missing-fields' } },
+                    },
+                },
+            })
+    end
 }
