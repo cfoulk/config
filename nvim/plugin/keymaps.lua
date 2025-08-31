@@ -51,3 +51,6 @@ keymap("n", "<C-j>", "<C-w>j")
 keymap("n", "<C-k>", "<C-w>k")
 keymap("n", "<C-h>", "<C-w>h")
 keymap("n", "<C-l>", "<C-w>l")
+
+keymap("n", "<C-n>", [[:bnext<CR>]])
+keymap("n", "<C-p>", [[:bprevious<CR>]])

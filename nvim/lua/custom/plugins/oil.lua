@@ -1,11 +1,22 @@
 return {
     'stevearc/oil.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
-    config = function ()
+    config = function()
         require('oil').setup({
             columns = { "icon" },
             view_options = {
                 show_hidden = true,
+            },
+            git = {
+                add = function(path)
+                    return true
+                end,
+                mv = function(src_path, dest_path)
+                    return true
+                end,
+                rm = function(path)
+                    return true
+                end,
             },
         })
 
